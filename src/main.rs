@@ -1,7 +1,8 @@
 #![allow(dead_code)]
-use std::fs;
 
 use clap::Parser;
+use rayon::prelude::*;
+use std::fs;
 
 #[derive(Debug, Default)]
 struct Line<'a> {
@@ -52,7 +53,7 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    args.files.iter().for_each(|filename| {
+    args.files.into_par_iter().for_each(|filename| {
         let data = fs::read_to_string(filename).unwrap();
         rime2lines(&data)
             .iter()
